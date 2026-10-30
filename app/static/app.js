@@ -36,7 +36,9 @@ function render() {
       return (x < y ? -1 : x > y ? 1 : 0) * sortDir;
     });
 
-  $("#devices tbody").innerHTML = rows.map((d) => `
+  $("#devices").querySelectorAll("tbody").forEach((b) => b.remove());
+  $("#devices").insertAdjacentHTML("beforeend", rows.map((d) => `
+    <tbody class="dev ${d.online ? "on" : ""}">
     <tr data-id="${d.id}" class="main ${d.online ? "" : "offline"}">
       <td><span class="dot ${d.online ? "on" : ""}" title="${d.online ? "online" : "offline"}"></span></td>
       <td class="mono">${esc(d.ip)}</td>
@@ -49,8 +51,9 @@ function render() {
       <td></td>
       <td colspan="5" class="ports-line">${d.ports.length
         ? d.ports.map((p) => `<span title="${esc([p.product, p.version].filter(Boolean).join(" "))}">${p.port}/${p.protocol}${p.service ? " " + esc(p.service) : ""}</span>`).join("")
-        : "Nessuna porta aperta"}</td>
-    </tr>`).join("");
+        : `<span class="none">Nessuna porta aperta</span>`}</td>
+    </tr>
+    </tbody>`).join(""));
   $("#empty").hidden = devices.length > 0;
 
   $("#statTotal").textContent = devices.length;
@@ -106,18 +109,18 @@ function openDetail(id) {
   $("#detail").showModal();
 }
 
-$("#devices tbody").addEventListener("click", (e) => {
+$("#devices").addEventListener("click", (e) => {
   const tr = e.target.closest("tr[data-id]");
   if (tr) openDetail(Number(tr.dataset.id));
 });
 
 // Le due righe di un dispositivo si evidenziano insieme
-$("#devices tbody").addEventListener("mouseover", (e) => {
+$("#devices").addEventListener("mouseover", (e) => {
   const tr = e.target.closest("tr[data-id]");
   document.querySelectorAll("#devices tr.hover").forEach((r) => r.classList.remove("hover"));
   if (tr) document.querySelectorAll(`#devices tr[data-id="${tr.dataset.id}"]`).forEach((r) => r.classList.add("hover"));
 });
-$("#devices tbody").addEventListener("mouseleave", () => {
+$("#devices").addEventListener("mouseleave", () => {
   document.querySelectorAll("#devices tr.hover").forEach((r) => r.classList.remove("hover"));
 });
 
