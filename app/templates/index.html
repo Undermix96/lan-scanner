@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LAN Scanner</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header>
+  <h1>LAN Scanner</h1>
+  <div class="status" id="status">…</div>
+  <div class="actions">
+    <button id="scanBtn">Scansiona ora</button>
+    <a class="btn secondary" href="/api/export.csv">Esporta CSV</a>
+  </div>
+</header>
+
+<main>
+  <section class="stats">
+    <div class="stat"><span id="statTotal">0</span><label>Dispositivi</label></div>
+    <div class="stat"><span id="statOnline">0</span><label>Online</label></div>
+    <div class="stat"><span id="statPorts">0</span><label>Porte aperte</label></div>
+    <div class="stat"><span id="statLast">—</span><label>Ultima scansione</label></div>
+  </section>
+
+  <section class="toolbar">
+    <input id="search" type="search" placeholder="Cerca IP, MAC, nome, vendor, porta, servizio…">
+    <label class="chk"><input type="checkbox" id="onlyOnline"> Solo online</label>
+  </section>
+
+  <table id="devices">
+    <thead>
+      <tr>
+        <th data-sort="online"></th>
+        <th data-sort="ip">IP</th>
+        <th data-sort="name">Nome</th>
+        <th data-sort="mac">MAC</th>
+        <th data-sort="vendor">Vendor</th>
+        <th data-sort="ports">Porte aperte</th>
+        <th data-sort="last_seen">Ultimo avvistamento</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <p class="empty" id="empty" hidden>Nessun dispositivo. Avvia una scansione.</p>
+
+  <h2>Storico scansioni</h2>
+  <table id="scans">
+    <thead><tr><th>#</th><th>Inizio</th><th>Fine</th><th>Target</th><th>Stato</th><th>Host</th></tr></thead>
+    <tbody></tbody>
+  </table>
+</main>
+
+<dialog id="detail">
+  <form method="dialog" id="detailForm">
+    <h3 id="dTitle"></h3>
+    <dl id="dInfo"></dl>
+    <label>Alias <input id="dAlias" type="text"></label>
+    <label>Note <textarea id="dNotes" rows="3"></textarea></label>
+    <h4>Porte aperte</h4>
+    <table class="ports"><thead><tr><th>Porta</th><th>Proto</th><th>Servizio</th><th>Prodotto / versione</th></tr></thead><tbody id="dPorts"></tbody></table>
+    <div class="dlg-actions">
+      <button type="button" class="danger" id="dDelete">Elimina</button>
+      <span class="spacer"></span>
+      <button value="cancel" class="secondary">Chiudi</button>
+      <button type="button" id="dSave">Salva</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

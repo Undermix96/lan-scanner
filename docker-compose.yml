@@ -1,0 +1,20 @@
+services:
+  lan-scanner:
+    build: .
+    image: lan-scanner:latest
+    container_name: lan-scanner
+    # Host networking is required to see the LAN (ARP discovery, MAC addresses, vendor).
+    network_mode: host
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+    environment:
+      # "auto" = scan the host's networks; or a comma list, e.g. "192.168.1.0/24,10.0.0.0/24"
+      SCAN_TARGETS: auto
+      SCAN_INTERVAL_MINUTES: 60
+      WEB_PORT: 8080
+      NMAP_PORT_ARGS: "--top-ports 1000 -sV --version-light -T4"
+      NMAP_OS_DETECT: "false"
+    volumes:
+      - ./data:/data
+    restart: unless-stopped
