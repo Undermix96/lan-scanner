@@ -29,7 +29,7 @@ Apri `http://<ip-del-server>:8080`.
 Immagine precompilata (amd64 e arm64, es. Raspberry Pi), pubblicata da GitHub Actions su GitHub Container Registry:
 
 ```bash
-docker run -d --name lan-scanner --network host --cap-add NET_RAW --cap-add NET_ADMIN -v "$PWD/data:/data" ghcr.io/undermix96/lan-scanner:latest
+docker run -d --name lan-scanner --network host --cap-add NET_RAW --cap-add NET_ADMIN -v lan-scanner-data:/data ghcr.io/undermix96/lan-scanner:latest
 ```
 
 Per usarla con compose, sostituisci `build: .` con `image: ghcr.io/undermix96/lan-scanner:latest` in `docker-compose.yml`.
@@ -38,7 +38,7 @@ Build locale senza compose:
 
 ```bash
 docker build -t lan-scanner .
-docker run -d --name lan-scanner --network host --cap-add NET_RAW --cap-add NET_ADMIN -v "$PWD/data:/data" lan-scanner
+docker run -d --name lan-scanner --network host --cap-add NET_RAW --cap-add NET_ADMIN -v lan-scanner-data:/data lan-scanner
 ```
 
 ## Configurazione
@@ -64,8 +64,13 @@ Le variabili non impostate usano il default indicato sotto. Con `docker run` puo
 | `NMAP_PORT_ARGS` | `--top-ports 1000 -sV --version-light -T4` | Argomenti nmap per la scansione delle porte (es. `-p- -sV` per tutte le porte) |
 | `NMAP_OS_DETECT` | `false` | Abilita il riconoscimento del sistema operativo (`-O`) |
 | `NMAP_HOST_TIMEOUT` | `5m` | Tempo massimo per host |
-| `DATA_DIR` | `./data` | Cartella dell'host dove salvare il database (solo compose) |
 | `DB_PATH` | `/data/lanscanner.db` | Percorso del database SQLite |
+
+Il database è salvato nel volume Docker `lan-scanner-data` (compose lo crea come `<progetto>_lan-scanner-data`, es. `lan-scanner_lan-scanner-data`). Per farne un backup:
+
+```bash
+docker run --rm -v lan-scanner_lan-scanner-data:/data -v "$PWD:/backup" alpine cp /data/lanscanner.db /backup/
+```
 
 Con `SCAN_TARGETS=auto` le reti più grandi di /22 vengono limitate al /24 dell'host, per evitare scansioni enormi.
 

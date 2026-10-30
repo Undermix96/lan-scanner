@@ -19,5 +19,8 @@ services:
       NMAP_OS_DETECT: ${NMAP_OS_DETECT:-false}
       NMAP_HOST_TIMEOUT: ${NMAP_HOST_TIMEOUT:-5m}
     volumes:
-      - ${DATA_DIR:-./data}:/data
+      - lan-scanner-data:/data
     restart: unless-stopped
+
+volumes:
+  lan-scanner-data:
