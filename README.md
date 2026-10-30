@@ -43,6 +43,19 @@ docker run -d --name lan-scanner --network host --cap-add NET_RAW --cap-add NET_
 
 ## Configurazione
 
+Le variabili si possono impostare in due modi:
+
+- **File `.env`** (consigliato): copia l'esempio e modificalo, compose lo legge in automatico.
+
+  ```bash
+  cp .env.example .env
+  docker compose up -d
+  ```
+
+- **Direttamente nel `docker-compose.yml`**, sostituendo il valore nella sezione `environment`.
+
+Le variabili non impostate usano il default indicato sotto. Con `docker run` puoi usare lo stesso file: `docker run --env-file .env ...`.
+
 | Variabile | Default | Descrizione |
 |---|---|---|
 | `SCAN_TARGETS` | `auto` | `auto` rileva le reti dell'host; altrimenti lista separata da virgole (`192.168.1.0/24,10.0.0.5`) |
@@ -51,6 +64,7 @@ docker run -d --name lan-scanner --network host --cap-add NET_RAW --cap-add NET_
 | `NMAP_PORT_ARGS` | `--top-ports 1000 -sV --version-light -T4` | Argomenti nmap per la scansione delle porte (es. `-p- -sV` per tutte le porte) |
 | `NMAP_OS_DETECT` | `false` | Abilita il riconoscimento del sistema operativo (`-O`) |
 | `NMAP_HOST_TIMEOUT` | `5m` | Tempo massimo per host |
+| `DATA_DIR` | `./data` | Cartella dell'host dove salvare il database (solo compose) |
 | `DB_PATH` | `/data/lanscanner.db` | Percorso del database SQLite |
 
 Con `SCAN_TARGETS=auto` le reti più grandi di /22 vengono limitate al /24 dell'host, per evitare scansioni enormi.
