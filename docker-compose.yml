@@ -1,7 +1,6 @@
 services:
   lan-scanner:
-    build: .
-    image: lan-scanner:latest
+    image: ghcr.io/undermix96/lan-scanner:latest
     container_name: lan-scanner
     # Host networking is required to see the LAN (ARP discovery, MAC addresses, vendor).
     network_mode: host
