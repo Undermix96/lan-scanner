@@ -1,5 +1,7 @@
 # LAN Scanner
 
+[![Build Docker image](https://github.com/Undermix96/lan-scanner/actions/workflows/docker.yml/badge.svg)](https://github.com/Undermix96/lan-scanner/actions/workflows/docker.yml)
+
 Container Docker che scansiona periodicamente la tua LAN con **nmap**, cataloga tutti i dispositivi trovati (IP, MAC, vendor, hostname) e le loro **porte aperte** con i servizi in ascolto, e mostra il tutto in una **web UI**.
 
 ## Funzionalità
@@ -24,7 +26,15 @@ Apri `http://<ip-del-server>:8080`.
 
 > Il container usa `network_mode: host` e le capability `NET_RAW`/`NET_ADMIN`: servono per vedere la LAN direttamente (ARP, MAC address, vendor). Funziona su Linux; su Docker Desktop (macOS/Windows) la rete host non è la LAN reale, quindi imposta `SCAN_TARGETS` manualmente e aspettati di non vedere i MAC.
 
-Senza compose:
+Immagine precompilata (amd64 e arm64, es. Raspberry Pi), pubblicata da GitHub Actions su GitHub Container Registry:
+
+```bash
+docker run -d --name lan-scanner --network host --cap-add NET_RAW --cap-add NET_ADMIN -v "$PWD/data:/data" ghcr.io/undermix96/lan-scanner:latest
+```
+
+Per usarla con compose, sostituisci `build: .` con `image: ghcr.io/undermix96/lan-scanner:latest` in `docker-compose.yml`.
+
+Build locale senza compose:
 
 ```bash
 docker build -t lan-scanner .
